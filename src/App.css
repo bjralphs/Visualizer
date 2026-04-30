@@ -1,0 +1,23 @@
+.App {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.info-board-wrapper {
+  position: fixed;
+  right: 0;
+  bottom: 12px;
+  width: min(360px, 90vw);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.info-board {
+  width: 100%;
+  max-height: calc(100vh - 270px);
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+}

@@ -1,0 +1,51 @@
+/* variables.css — design tokens shared across all stylesheets */
+:root {
+    /* Sky-blue accent: node outlines, hover states, active borders */
+    --color-sky: rgb(175, 216, 248);
+    --color-sky-35: rgba(175, 216, 248, 0.35);
+    --color-sky-40: rgba(175, 216, 248, 0.4);
+    --color-sky-70: rgba(175, 216, 248, 0.7);
+
+    /* Modal / header blue palette */
+    --color-blue-primary: #3b91d4;
+    --color-blue-dark: #1a5c9e;
+    --color-blue-deeper: #1a3a5c;
+    --color-blue-selection: rgba(59, 145, 212, 0.4);
+
+    /* Info-board brown palette */
+    --color-brown-dark: #3d1f00;
+    --color-brown-mid: #7a4010;
+    --color-brown-border: rgba(120, 60, 0, 0.35);
+    --color-brown-muted: rgba(120, 60, 0, 0.6);
+
+    /* Typography */
+    --font-brand: 'Fredoka One', cursive;
+
+    /* Grid tile geometry (matches NODE_WIDTH / NODE_HEIGHT in PFV) */
+    --node-size: 25px;
+
+    /* Spacing scale */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 32px;
+    --space-7: 48px;
+    --space-8: 64px;
+
+    /* Elevation / shadow scale */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.15);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.3);
+    --shadow-xl: 0 16px 40px rgba(0, 0, 0, 0.4);
+
+    /* Transition tokens */
+    --transition-fast: 80ms ease;
+    --transition-normal: 160ms ease;
+    --transition-slow: 300ms ease;
+
+    /* Focus ring — WCAG 2.1 AA compliant */
+    --focus-outline: 3px solid #ffbf47;
+    --focus-outline-offset: 2px;
+}

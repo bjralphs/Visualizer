@@ -1,0 +1,19 @@
+/* Footer.css */
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 2rem;
+    background-color: #333;
+    color: white;
+}
+
+.footer-title {
+    font-size: 20px;
+}
+
+.footer-sub {
+    font-size: 13px;
+    color: rgb(175, 216, 248);
+    opacity: 0.85;
+}

@@ -1,0 +1,294 @@
+.node {
+  position: relative;
+  width: var(--node-size);
+  height: var(--node-size);
+  outline: 1px solid var(--color-sky);
+  display: inline-block;
+  background-color: #fff;
+  background-image: url('../../assets/grid_background/field.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.node-finish {
+  cursor: grab;
+  background-image: url('../../assets/icons/carrot.gif'), url('../../assets/grid_background/field.png');
+  background-size: cover, cover;
+  background-repeat: no-repeat, no-repeat;
+  background-position: center, center;
+}
+
+.node-f {
+  background-color: rgb(12, 53, 71);
+}
+
+.node-s {
+  background-color: rgb(12, 53, 71);
+}
+
+.node-start {
+  cursor: grab;
+  background-image: url('../../assets/icons/startNode.gif'), url('../../assets/grid_background/field.png');
+  background-size: cover, cover;
+  background-repeat: no-repeat, no-repeat;
+  background-position: center, center;
+}
+
+.node-visited {
+  animation-name: visitedAnimation;
+  animation-duration: 1.5s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
+@keyframes visitedAnimation {
+  0% {
+    transform: scale(0.3);
+    background-color: rgba(0, 0, 66, 0.75);
+    background-image: none;
+    border-radius: 100%;
+  }
+
+  50% {
+    background-color: rgba(17, 104, 217, 0.75);
+    background-image: none;
+  }
+
+  75% {
+    transform: scale(1.2);
+    background-color: rgba(0, 217, 159, 0.75);
+    background-image: none;
+  }
+
+  100% {
+    transform: scale(1);
+    background-color: transparent;
+    background-image: url('../../assets/grid_background/visited_field.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+}
+
+.node-wall {
+  /* background supplied by randomized wall tile via inline style */
+}
+
+.node-shortest-path {
+  animation-name: shortestPath;
+  animation-duration: 1.5s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
+@keyframes shortestPath {
+  0% {
+    transform: scale(0.6);
+    background-color: rgb(230, 175, 80);
+    background-image: none;
+  }
+
+  30% {
+    transform: scale(1.2);
+    background-color: rgb(195, 130, 55);
+    background-image: none;
+  }
+
+  65% {
+    transform: scale(1.05);
+    background-color: rgb(150, 90, 40);
+    background-image: none;
+  }
+
+  100% {
+    transform: scale(1);
+    background-color: transparent;
+    background-image: url('../../assets/grid_background/shortest_path.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+}
+
+.node-shortest-path-leading {
+  background-image: url('../../assets/grid_background/field.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+}
+
+.node-shortest-path-leading::after {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background-image: url('../../assets/shortest_path/mound.gif');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  pointer-events: none;
+  z-index: 10;
+  transform: rotate(var(--mound-rotate, 0deg));
+}
+
+.node-shortest-path-arrival {
+  background-image: url('../../assets/grid_background/field.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+}
+
+.node-shortest-path-arrival::after {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background-image: url('../../assets/shortest_path/arrival.gif');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.node-shortest-path-final {
+  background-image: url('../../assets/grid_background/field.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+}
+
+.node-shortest-path-final::after {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background-image: url('../../assets/shortest_path/final.gif');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.node-visited-start {
+  background-image: url('../../assets/grid_background/visited_field.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+}
+
+.node-visited-finish {
+  background-image: url('../../assets/grid_background/visited_field.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+}
+
+.node-weight {
+  background-image: url('../../assets/icons/weightNode.png'), url('../../assets/grid_background/field.png');
+  background-size: cover, cover;
+  background-repeat: no-repeat, no-repeat;
+  background-position: center, center;
+  background-color: transparent;
+  outline: 1px solid var(--color-sky);
+}
+
+.node-visited-weight {
+  animation-name: visitedWeightAnimation;
+  animation-duration: 1.5s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
+@keyframes visitedWeightAnimation {
+  0% {
+    transform: scale(0.3);
+    background-color: rgba(0, 66, 20, 0.75);
+    background-image: none;
+    border-radius: 100%;
+  }
+
+  50% {
+    background-color: rgba(17, 160, 80, 0.75);
+    background-image: none;
+  }
+
+  75% {
+    transform: scale(1.2);
+    background-color: rgba(100, 217, 120, 0.75);
+    background-image: none;
+  }
+
+  100% {
+    transform: scale(1);
+    background-color: rgb(100, 179, 73);
+    background-image: none;
+    outline: 1px solid var(--color-sky);
+  }
+}
+
+.node-shortest-path-weight {
+  animation-name: shortestPathWeight;
+  animation-duration: 1.5s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
+@keyframes shortestPathWeight {
+  0% {
+    transform: scale(0.6);
+    background-color: rgb(255, 180, 50);
+    background-image: none;
+  }
+
+  50% {
+    transform: scale(1.2);
+    background-color: rgb(255, 140, 0);
+    background-image: none;
+  }
+
+  100% {
+    transform: scale(1);
+    background-color: rgb(220, 100, 0);
+    background-image: none;
+    outline: 1px solid var(--color-sky);
+  }
+}
+
+.node-gate {
+  cursor: grab;
+  background-image: url('../../assets/icons/gateNode.png'), url('../../assets/grid_background/field.png');
+  background-size: cover, cover;
+  background-repeat: no-repeat, no-repeat;
+  background-position: center, center;
+  outline: 1px solid var(--color-sky);
+}

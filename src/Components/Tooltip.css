@@ -1,0 +1,82 @@
+/* Tooltip.css — shared tooltip pattern */
+
+
+/* ── Wrapper ── */
+.tt {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tt--legend {
+    cursor: help;
+}
+
+/* ── Tooltip bubble ── */
+.tt__text {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    background: rgba(30, 14, 4, 0.92);
+    color: #f5e6c8;
+    font-family: var(--font-brand);
+    font-size: 12px;
+    letter-spacing: 0.4px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(200, 140, 60, 0.45);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    z-index: 9999;
+}
+
+/* Arrow shared base */
+.tt__text::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+}
+
+/* ── Above variant ── */
+.tt__text--above {
+    bottom: calc(100% + 8px);
+    top: auto;
+}
+
+.tt__text--above::after {
+    top: 100%;
+    border-top-color: rgba(30, 14, 4, 0.92);
+}
+
+/* ── Below variant ── */
+.tt__text--below {
+    top: calc(100% + 8px);
+    bottom: auto;
+}
+
+.tt__text--below::after {
+    bottom: 100%;
+    border-bottom-color: rgba(30, 14, 4, 0.92);
+}
+
+/* ── Reveal on hover ── */
+.tt:hover .tt__text {
+    opacity: 1;
+}
+
+/* ── Title button: left-anchor so it doesn't drift under a wide image ── */
+.tt--title .tt__text {
+    left: 0;
+    transform: none;
+}
+
+.tt--title .tt__text::after {
+    left: 1.5rem;
+    transform: none;
+}

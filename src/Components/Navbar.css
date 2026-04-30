@@ -1,0 +1,172 @@
+/* Navbar.css */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 2rem 1.5rem;
+  height: 140px;
+  background-image: url('../assets/banner.jpg');
+  background-size: cover;
+  background-position: bottom;
+  background-repeat: no-repeat;
+  overflow: visible;
+  position: relative;
+}
+
+.navbar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  background-image: url('../assets/border.png');
+  background-repeat: repeat-x;
+  background-size: auto 40px;
+  transform: translateY(50%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ── Action buttons (Visualize!, Clear Board, Clear Path, Generate Maze) ── */
+.nav-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
+  padding: 0.5rem 1rem;
+  transition: color 0.2s;
+  font-size: inherit;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.nav-btn:hover {
+  color: var(--color-sky);
+}
+
+/* Title button */
+.nav-title {
+  padding: 0;
+}
+
+.nav-title-img {
+  width: 480px;
+  height: auto;
+  display: block;
+  margin-top: -16px;
+  pointer-events: none;
+}
+
+/* PNG trigger button image */
+.menu-trigger-img {
+  height: 130px;
+  width: 130px;
+  display: block;
+  pointer-events: none;
+}
+
+/* ── Visualize button ── */
+.visualize {
+  background-color: lightskyblue;
+  border-radius: 5px;
+  -webkit-text-stroke: 1px black;
+  font-weight: 100;
+  color: white;
+}
+
+.visualize:hover {
+  background-color: lightcyan;
+  color: white;
+}
+
+.visualize-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── Image-based action buttons ── */
+.nav-btn-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-btn-icon {
+  background: none;
+  border: none;
+  -webkit-appearance: none;
+  appearance: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  line-height: 0;
+  display: flex;
+  align-items: center;
+}
+
+.nav-btn-icon:hover {
+  opacity: 0.8;
+}
+
+.menu-btn-icon {
+  height: 130px;
+  width: 130px;
+  display: block;
+  pointer-events: none;
+}
+
+.menu-btn-icon-large {
+  height: 130px;
+  width: 130px;
+  display: block;
+  pointer-events: none;
+}
+
+/* Absolutely centered Visualize button */
+/* ── Draw mode toggle buttons ── */
+.draw-mode-btn {
+  border-radius: 6px;
+  padding: 4px;
+  margin: 0 2px;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.draw-mode-btn:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.draw-mode-active {
+  background-color: var(--color-sky-35);
+  box-shadow: 0 0 0 2px var(--color-sky);
+}
+
+.draw-mode-icon {
+  width: 28px;
+  height: 28px;
+  display: block;
+  pointer-events: none;
+  filter: invert(1);
+}
+
+/* Disabled state for non-visualize items (S1, S2, B5) */
+.nav-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── Dropdown arrow rotation ── */
+.icon-size {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.lastNav {
+  margin-right: 0;
+}

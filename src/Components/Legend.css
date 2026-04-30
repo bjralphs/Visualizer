@@ -1,0 +1,147 @@
+/* Navbar.css */
+.legend {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3rem 2rem 3.5rem;
+  gap: 0;
+  position: relative;
+  z-index: 1;
+  margin-top: -20px;
+  margin-bottom: -30px;
+}
+
+.legend-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex: 1;
+}
+
+.legend-spacer {
+  display: none;
+}
+
+.icon-container {
+  position: relative;
+  z-index: 2;
+  width: 280px;
+  height: 84px;
+  flex-shrink: 0;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.icon-container.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.icon-slot {
+  position: relative;
+  transform: none;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: filter 0.15s ease, box-shadow 0.15s ease;
+}
+
+.icon-slot img {
+  width: 36px;
+  height: 36px;
+  display: block;
+  pointer-events: none;
+  filter: invert(1);
+}
+
+.icon-slot:hover {
+  filter: brightness(1.3);
+}
+
+.icon-slot-active {
+  box-shadow: 0 0 0 3px var(--color-sky);
+  background-color: var(--color-sky-35);
+}
+
+.legend ul {
+  color: white;
+  text-decoration: none;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  -webkit-text-stroke: 0.5px black;
+  font-weight: 100;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.icon-size {
+  width: 200px;
+  height: 60px;
+  margin: -12px 0;
+  vertical-align: middle;
+  mix-blend-mode: multiply;
+}
+
+.emptyNode {
+  width: 20px;
+  height: 20px;
+  outline: 1px solid var(--color-sky);
+  display: inline-block;
+  margin-right: 10px;
+  background-image: url('../assets/grid_background/field.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.wallNode {
+  width: 20px;
+  height: 20px;
+  outline: 1px solid var(--color-sky);
+  display: inline-block;
+  margin-right: 10px;
+  background-image: url('../assets/wall_background/wall_1.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.weightNode {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.visitedNode {
+  width: 20px;
+  height: 20px;
+  outline: 1px solid var(--color-sky);
+  display: inline-block;
+  margin-right: 10px;
+  background-image: url('../assets/grid_background/visited_field.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.shortestNode {
+  width: 20px;
+  height: 20px;
+  outline: 1px solid var(--color-sky);
+  display: inline-block;
+  margin-right: 10px;
+  background-image: url('../assets/grid_background/shortest_path.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.lastNav {
+  margin-right: 10%;
+}
