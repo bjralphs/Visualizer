@@ -866,26 +866,26 @@ export default class PathfindingVisualizer extends Component {
             break;
           case 'Binary Tree':
             this.visualizeBinaryTreeMaze();
-          break;
-        case 'Sidewinder':
-          this.visualizeSidewinderMaze();
-          break;
-        case 'Rooms & Corridors':
-          this.visualizeRoomsMaze();
-          break;
-        case 'Recursive Backtracker':
-          this.visualizeRecursiveBacktracker();
-          break;
-        case 'Spiral':
-          this.visualizeSpiralMaze();
-          break;
-        case 'Concentric Rings':
-          this.visualizeConcentricRings();
-          break;
-        default:
-          window.alert('Select A Maze First!');
-      }
-    });
+            break;
+          case 'Sidewinder':
+            this.visualizeSidewinderMaze();
+            break;
+          case 'Rooms & Corridors':
+            this.visualizeRoomsMaze();
+            break;
+          case 'Recursive Backtracker':
+            this.visualizeRecursiveBacktracker();
+            break;
+          case 'Spiral':
+            this.visualizeSpiralMaze();
+            break;
+          case 'Concentric Rings':
+            this.visualizeConcentricRings();
+            break;
+          default:
+            window.alert('Select A Maze First!');
+        }
+      });
   }
 
   selectSpeed() {
