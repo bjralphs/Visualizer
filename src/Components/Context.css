@@ -5,13 +5,14 @@
   position: absolute;
   top: 16%;
   bottom: 8%;
-  left: 14%;
-  right: 14%;
+  left: 16%;
+  right: 16%;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0;
   pointer-events: none;
+  overflow-x: hidden;
 }
 
 .bg-dropdown__toggle {
@@ -36,12 +37,29 @@
   flex-direction: column;
   align-items: center;
   gap: 0.9rem;
-  overflow-y: scroll;
-  scrollbar-width: none;
+  overflow-y: auto;
+  overflow-x: hidden;
+  pointer-events: all;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(120, 60, 0, 0.35) transparent;
+  padding-bottom: 1rem;
 }
 
 .context-scroll::-webkit-scrollbar {
-  display: none;
+  width: 4px;
+}
+
+.context-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.context-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(120, 60, 0, 0.35);
+  border-radius: 4px;
+}
+
+.context-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(120, 60, 0, 0.65);
 }
 
 .context-arrow {
@@ -61,7 +79,7 @@
 }
 
 .message {
-  font-size: 17px;
+  font-size: clamp(11px, 4.25vw, 17px);
   color: var(--color-brown-dark);
   font-family: var(--font-brand);
   font-weight: 400;
@@ -74,10 +92,12 @@
   width: 100%;
   -webkit-text-stroke: 0;
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .message-label {
-  font-size: 12px;
+  font-size: clamp(8px, 3vw, 12px);
   color: var(--color-brown-mid);
   letter-spacing: 1.5px;
   text-transform: uppercase;
@@ -107,13 +127,13 @@
 }
 
 .score-algo {
-  font-size: 14px;
+  font-size: clamp(9px, 3.5vw, 14px);
   color: var(--color-brown-dark);
   font-family: var(--font-brand);
 }
 
 .score-stats {
-  font-size: 12px;
+  font-size: clamp(8px, 3vw, 12px);
   color: var(--color-brown-mid);
   font-family: var(--font-brand);
   letter-spacing: 0.3px;
@@ -141,14 +161,14 @@
 }
 
 .bg-dropdown__title {
-  font-size: 12px;
+  font-size: clamp(8px, 3vw, 12px);
   color: var(--color-brown-mid);
   letter-spacing: 1.5px;
   text-transform: uppercase;
 }
 
 .bg-dropdown__chevron {
-  font-size: 9px;
+  font-size: clamp(6px, 2.25vw, 9px);
   color: rgba(120, 60, 0, 0.55);
   line-height: 1;
 }
@@ -165,13 +185,13 @@
   gap: 0.45rem;
   padding-top: 0.4rem;
   color: var(--color-brown-dark);
-  font-size: 14px;
+  font-size: clamp(9px, 3.5vw, 14px);
   width: 100%;
 }
 
 .algo-info__label {
   display: inline-block;
-  font-size: 11px;
+  font-size: clamp(7px, 2.75vw, 11px);
   color: var(--color-brown-mid);
   letter-spacing: 1.4px;
   text-transform: uppercase;
@@ -192,11 +212,11 @@
 
 .algo-info__dot {
   color: rgba(120, 60, 0, 0.45);
-  font-size: 15px;
+  font-size: clamp(9px, 3.75vw, 15px);
 }
 
 .algo-info__origin {
-  font-size: 13px;
+  font-size: clamp(8px, 3.25vw, 13px);
   color: #5a2e00;
   width: 100%;
   max-width: 100%;
@@ -215,7 +235,7 @@
 }
 
 .algo-info__bullet {
-  font-size: 13px;
+  font-size: clamp(8px, 3.25vw, 13px);
   color: var(--color-brown-dark);
   line-height: 1.35;
   max-width: 95%;
@@ -231,7 +251,7 @@
   margin-bottom: 0.4rem;
   padding: 0.15rem 0.4rem;
   font-family: var(--font-brand);
-  font-size: 11px;
+  font-size: clamp(7px, 2.75vw, 11px);
   letter-spacing: 1.2px;
   text-transform: uppercase;
   color: var(--color-brown-mid);
@@ -248,8 +268,8 @@
 }
 
 .context-github-icon {
-  width: 13px;
-  height: 13px;
+  width: clamp(8px, 3.25vw, 13px);
+  height: clamp(8px, 3.25vw, 13px);
   fill: currentColor;
   flex-shrink: 0;
 }
@@ -262,45 +282,11 @@
     left: 12%;
     right: 12%;
   }
-
-  .message {
-    font-size: 15px;
-  }
 }
 
 @media (max-width: 900px) {
   .context {
     left: 8%;
     right: 8%;
-  }
-
-  .message {
-    font-size: 13px;
-  }
-}
-
-
-/* -- Responsive breakpoints for .context overlay ------- */
-@media (max-width: 1280px) {
-  .context {
-    top: 14%;
-    bottom: 6%;
-    left: 12%;
-    right: 12%;
-  }
-
-  .message {
-    font-size: 15px;
-  }
-}
-
-@media (max-width: 900px) {
-  .context {
-    left: 8%;
-    right: 8%;
-  }
-
-  .message {
-    font-size: 13px;
   }
 }

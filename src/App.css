@@ -5,19 +5,31 @@
   min-height: 100vh;
 }
 
-.info-board-wrapper {
+.info-board-column {
   position: fixed;
   right: 0;
-  bottom: 12px;
-  width: min(360px, 90vw);
+  top: 0;
+  bottom: 0;
+  width: var(--info-board-w, min(360px, 90vw));
   z-index: 5;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 16px;
+  pointer-events: none;
+}
+
+.info-board-wrapper {
+  position: relative;
+  width: fit-content;
   pointer-events: none;
 }
 
 .info-board {
-  width: 100%;
-  max-height: calc(100vh - 270px);
-  object-fit: contain;
   display: block;
+  max-width: min(360px, 90vw);
+  max-height: calc(100vh - 270px);
+  width: auto;
+  height: auto;
   pointer-events: none;
 }

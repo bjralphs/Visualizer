@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import './App.css';
 import infoBoardImg from './assets/infoBoard.png';
 import Navbar from './Components/Navbar';
@@ -9,9 +9,32 @@ import Context from './Components/Context';
 import ErrorBoundary from './Components/ErrorBoundary';
 import { MenuItemProvider } from './Components/MenuItemContext.js';
 
+// Must mirror the constants in PathfindingVisualizer.jsx
+const INFO_BOARD_MAX_W = 360;
+const INFO_BOARD_ASPECT = 280 / 700; // width / height of infoBoard.png
+const INFO_BOARD_MAX_H_OFFSET = 270; // matches max-height: calc(100vh - 270px)
+
+function computeInfoBoardW() {
+  const byWidth = Math.min(INFO_BOARD_MAX_W, window.innerWidth * 0.9);
+  const byHeight = (window.innerHeight - INFO_BOARD_MAX_H_OFFSET) * INFO_BOARD_ASPECT;
+  return Math.min(byWidth, byHeight);
+}
+
 function App() {
   // Create a reference using useRef
   const pathfindingVisualizerRef = useRef(null);
+
+  useEffect(() => {
+    const update = () => {
+      document.documentElement.style.setProperty(
+        '--info-board-w',
+        `${computeInfoBoardW()}px`
+      );
+    };
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
 
   const handleSelectAlgorithm = () => {
     // Check if the ref is currently pointing to an instance of PathfindingVisualizer
@@ -54,13 +77,15 @@ function App() {
           />
           <Legend />
           <PathfindingVisualizer ref={pathfindingVisualizerRef} />
-          <div className="info-board-wrapper">
-            <img
-              src={infoBoardImg}
-              alt="Info Board"
-              className="info-board"
-            />
-            <Context />
+          <div className="info-board-column">
+            <div className="info-board-wrapper">
+              <img
+                src={infoBoardImg}
+                alt="Info Board"
+                className="info-board"
+              />
+              <Context />
+            </div>
           </div>
         </div>
       </MenuItemProvider>

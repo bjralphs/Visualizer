@@ -61,6 +61,9 @@ const NAVBAR_HEIGHT = 190; // navbar + legend + context bar
 const FOOTER_HEIGHT = 80;  // footer: 2 × 2rem padding + line height
 const MAX_ROWS = 26;  // caps grid height: 26 × 25px = 650px + 246px chrome ≈ 896px
 const MAX_COLS = 68;  // caps grid width:  68 × 25px = 1700px
+const INFO_BOARD_WIDTH = 360;       // max width of the fixed info-board-wrapper
+const INFO_BOARD_ASPECT = 280 / 700; // intrinsic aspect ratio of infoBoard.png (280×700)
+const PV_PADDING_LEFT = 16;   // 1rem padding-left on .pv-container
 
 // Main component definition
 export default class PathfindingVisualizer extends Component {
@@ -109,8 +112,12 @@ export default class PathfindingVisualizer extends Component {
     this.animationTimeouts = [];
     this.context.setIsAnimating(false);
     const availableHeight = window.innerHeight - NAVBAR_HEIGHT - FOOTER_HEIGHT;
-    const numRows = Math.min(Math.floor(availableHeight / NODE_HEIGHT), MAX_ROWS);
-    const numCols = Math.min(Math.floor(window.innerWidth / NODE_WIDTH), MAX_COLS);
+    const numRows = Math.min(Math.floor((availableHeight - 2 * NODE_HEIGHT) / NODE_HEIGHT), MAX_ROWS);
+    // Actual rendered board width: constrained by both max-width and max-height (aspect ratio)
+    const infoBoardByWidth = Math.min(INFO_BOARD_WIDTH, window.innerWidth * 0.9);
+    const infoBoardByHeight = (window.innerHeight - 270) * INFO_BOARD_ASPECT;
+    const infoBoardW = Math.min(infoBoardByWidth, infoBoardByHeight);
+    const numCols = Math.min(Math.floor((window.innerWidth - infoBoardW - PV_PADDING_LEFT - 2 * NODE_WIDTH) / NODE_WIDTH), MAX_COLS);
     const startRow = Math.min(this.state.startNodeRow, numRows - 1);
     const startCol = Math.min(this.state.startNodeCol, numCols - 1);
     const finishRow = Math.min(this.state.finishNodeRow, numRows - 1);
@@ -974,8 +981,12 @@ const getInitialGrid = (
   finishCol = FINISH_NODE_COL,
 ) => {
   const availableHeight = window.innerHeight - NAVBAR_HEIGHT - FOOTER_HEIGHT;
-  const numRows = Math.min(Math.floor(availableHeight / NODE_HEIGHT), MAX_ROWS);
-  const numCols = Math.min(Math.floor(window.innerWidth / NODE_WIDTH), MAX_COLS);
+  const numRows = Math.min(Math.floor((availableHeight - 2 * NODE_HEIGHT) / NODE_HEIGHT), MAX_ROWS);
+  // Actual rendered board width: constrained by both max-width and max-height (aspect ratio)
+  const infoBoardByWidth = Math.min(INFO_BOARD_WIDTH, window.innerWidth * 0.9);
+  const infoBoardByHeight = (window.innerHeight - 270) * INFO_BOARD_ASPECT;
+  const infoBoardW = Math.min(infoBoardByWidth, infoBoardByHeight);
+  const numCols = Math.min(Math.floor((window.innerWidth - infoBoardW - PV_PADDING_LEFT - 2 * NODE_WIDTH) / NODE_WIDTH), MAX_COLS);
 
   const grid = [];
   for (let row = 0; row < numRows; row++) {
