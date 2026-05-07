@@ -63,10 +63,12 @@ The Pathfinding Visualizer is a client-side React single-page application (SPA) 
 
 | Dependency | Version | Purpose |
 |---|---|---|
-| `react` | ^16.10.1 | UI framework |
-| `react-dom` | ^16.10.1 | DOM rendering |
-| `react-scripts` | 3.1.2 | Build toolchain (Create React App) |
+| `react` | ^18.3.1 | UI framework |
+| `react-dom` | ^18.3.1 | DOM rendering |
+| `react-scripts` | ^5.0.1 | Build toolchain (Create React App; Webpack 5, ESLint 8, Jest 27) |
 | `gh-pages` | ^6.3.0 (dev) | GitHub Pages deployment |
+| `@testing-library/react` | ^13 (dev) | React Testing Library (explicit devDep; react-scripts@5 nests rather than hoists) |
+| `cross-env` | ^10.1.0 (dev) | Cross-platform env vars (retained; used in `predeploy` only) |
 
 There are no API clients, authentication libraries, state management libraries (Redux, MobX), or CSS-in-JS dependencies.
 
@@ -147,9 +149,16 @@ graph TD
 ---
 
 ## Operational Concerns
-- The service worker (`src/serviceWorker.js`) is defined but **not registered** by default in `src/index.js`.
+- `src/serviceWorker.js` has been **deleted** (T06-R1). It was CRA PWA boilerplate that was never registered. The `index.js` import and `unregister()` call were removed alongside it.
+- **T12 — React 18 (May 2026):** `src/index.js` now uses `createRoot` from `react-dom/client` (React 18 concurrent API). `ReactDOM.render` in `PathfindingVisualizer.test.jsx` is deprecated but functional; it emits a React 18 warning in test output only and does not affect production.
+- **T13 — react-scripts 5 / Webpack 5 (May 2026):** Upgraded from react-scripts 3.1.2 (Webpack 4) to 5.0.1 (Webpack 5). The `--openssl-legacy-provider` Node option is no longer needed. ESLint 8 is bundled; Unicode BOM errors from pre-existing source files are silenced via `"unicode-bom": "off"` in `eslintConfig` in `package.json`.
+- **T14 — ARIA / Keyboard (May 2026):** Grid has `role="grid"` / `role="row"` / `role="gridcell"` hierarchy. Each `Node` has `tabIndex={0}`, `aria-label` (including node state), and a `handleKeyDown` handler for Space/Enter. Focus ring via `.node:focus-visible`. `aria-pressed` was intentionally omitted — it is invalid on `role="gridcell"` per ARIA spec.
+- **T15 — Touch / Mobile (May 2026):** `onTouchStart` is handled per `Node`; `onTouchMove` and `onTouchEnd` are handled on the `.grid` container div. `handleTouchMove` uses `document.elementFromPoint` to resolve the node under the finger and delegates to `handleMouseEnter`. `touch-action: none` on `.grid` prevents browser scroll interception during drawing.
+- **CI (May 2026):** `.github/workflows/ci.yml` runs `npm test` + `npm run build` on every push and PR. `.github/workflows/deploy.yml` updated: Node 20 LTS, removed stale `--openssl-legacy-provider`, added test step before deploy.
+- **Coverage thresholds (May 2026):** `jest.coverageThreshold` in `package.json` enforces floor of 30–45% globally. `npm run test:coverage` produces a text + lcov report.
+- **Node 24 compatibility:** A `[DEP0176] fs.F_OK is deprecated` warning is emitted by react-scripts 5.0.1 internals on Node 24. It does not affect the build or runtime.
 - The build targets GitHub Pages (`homepage` in `package.json`).
-- `NODE_OPTIONS=--openssl-legacy-provider` is set in all scripts, indicating a Node.js version mismatch requiring a legacy OpenSSL flag.
+- `NODE_OPTIONS=--openssl-legacy-provider` is required due to a Node.js 17+/Webpack 4 incompatibility. Scripts now use `cross-env` (T07) so they work on Windows, macOS, and Linux.
 
 ---
 

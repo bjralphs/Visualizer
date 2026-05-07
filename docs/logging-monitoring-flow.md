@@ -4,7 +4,9 @@
 Document what is logged, where logs are written, and what monitoring exists for the Pathfinding Visualizer.
 
 ## Scope
-`src/Components/ErrorBoundary.jsx`, `src/serviceWorker.js`, browser console output.
+`src/Components/ErrorBoundary.jsx`, browser console output.
+
+> `src/serviceWorker.js` was deleted in task T06-R1. Service worker log entries below are historical and no longer apply.
 
 ---
 
@@ -19,8 +21,7 @@ The application has minimal, informal logging. There is no structured logging li
 | Event | Location | Severity | Output |
 |---|---|---|---|
 | Unhandled render error | `ErrorBoundary.jsx:componentDidCatch` | ERROR | `console.error('ErrorBoundary caught:', error, info.componentStack)` |
-| Service worker ready (localhost only) | `serviceWorker.js:register` | INFO | `console.log('This web app is being served cache-first...')` |
-| Service worker registration failure | `serviceWorker.js:registerValidSW` | `Needs verification` | `Needs verification` |
+| ~~Service worker ready (localhost only)~~ | ~~`serviceWorker.js`~~ | ~~INFO~~ | _Removed — T06-R1_ |
 
 No algorithm execution, maze generation, user interaction, or performance events are logged.
 
@@ -49,16 +50,12 @@ flowchart TD
     EB["ErrorBoundary.jsx\ncomponentDidCatch()"]
     Console["Browser DevTools Console\nconsole.error(...)"]
     Fallback["Fallback UI rendered\n(Something went wrong)"]
-    SW["serviceWorker.js\nregister() / checkValidServiceWorker()"]
-    SWLog["console.log (localhost only)"]
     NoExternal["No external log service\nNo alerting\nNo analytics"]
 
     RenderError --> EB
     EB --> Console
     EB --> Fallback
-    SW --> SWLog
     Console --> NoExternal
-    SWLog --> NoExternal
 ```
 
 ---
@@ -74,11 +71,11 @@ flowchart TD
 - No performance monitoring (Web Vitals, Lighthouse CI).
 - No user analytics or feature usage tracking.
 - Animation callback errors (`setTimeout`) bypass the `ErrorBoundary`.
-- Service worker logging details are `Needs verification`.
+- ~~Service worker logging details are `Needs verification`.~~ _Not applicable — file deleted._
 
 ---
 
 ## Recommended Follow-up Work
 - Integrate Sentry (or equivalent) in `ErrorBoundary.componentDidCatch` to capture production errors automatically.
 - Wrap animation `setTimeout` callbacks in `try/catch` blocks and report to an error service.
-- Add Web Vitals reporting via `src/serviceWorker.js` or `src/index.js`.
+- Add Web Vitals reporting via `src/index.js` or a dedicated metrics module.

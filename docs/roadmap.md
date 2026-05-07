@@ -69,7 +69,7 @@ for performant animations.
 | T3 | Floyd-Warshall / Bellman-Ford scale | O(V^3) and O(VE) � freeze-risk on grids larger than ~30x60 |
 | T4 | Direct DOM mutation for animation | Intentional for perf, but couples animation to DOM IDs |
 | T5 | Stale dependencies | react@16.10.1, react-scripts@3.1.2 � 5+ years behind |
-| T6 | PWA unused | serviceWorker.unregister() always called; boilerplate never cleaned up |
+| T6 | ~~PWA unused~~ | ~~serviceWorker.unregister() always called; boilerplate never cleaned up~~ _Resolved in T06-R1 (May 2026): `src/serviceWorker.js` deleted; import removed from `index.js`._  |
 
 ---
 

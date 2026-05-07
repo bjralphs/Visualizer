@@ -13,6 +13,7 @@ All data flows are client-side only. There is no backend, API, or database.
 | Entry Point | Source | Description |
 |---|---|---|
 | Mouse events | User | `onMouseDown`, `onMouseEnter`, `onMouseUp` on `Node.jsx` trigger wall/weight/gate drawing |
+| Touch events | User | `onTouchStart` on `Node.jsx`; `onTouchMove`/`onTouchEnd` on the grid div — map to the same drawing logic via `handleTouchStart`, `handleTouchMove`, `handleTouchEnd` (T15) |
 | Algorithm selection | User | `AlgorithmModal.jsx` → `MenuItemContext` → `PathfindingVisualizer.jsx` via `selectAlgorithm()` |
 | Maze selection | User | `MazeModal.jsx` → `MenuItemContext` → `PathfindingVisualizer.jsx` via `selectMaze()` |
 | Speed selection | User | `Navbar.jsx` → `useSpeedItem()` hook → animation delay calculation |
@@ -54,10 +55,16 @@ User clicks Visualize
 
 ### Drawing Walls / Weights / Gates
 ```
-onMouseDown(row, col) → PathfindingVisualizer.jsx:handleMouseDown()
+onMouseDown(row, col) or onTouchStart(row, col)  ← T15: touch mirrors mouse
+  → PathfindingVisualizer.jsx:handleMouseDown() / handleTouchStart()
   → getNewGridWithWallToggled(grid, row, col) | getNewGridWithWeightToggled | getNewGridWithGateToggled
   → this.setState({ grid: newGrid })
   → Node.jsx re-renders via React.memo
+
+onTouchMove (fires on .grid div, not per-Node)   ← T15: elementFromPoint maps touch to node
+  → document.elementFromPoint(touch.clientX, touch.clientY)
+  → parse id="node-{row}-{col}" → handleMouseEnter(row, col)
+```
 ```
 
 ### Drag-and-Drop (Start / Finish / Gate nodes)

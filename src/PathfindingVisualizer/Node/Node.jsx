@@ -9,6 +9,18 @@ import './Node.css';
 
 const WALL_IMAGES = [wall1, wall2, wall3, wall4, wall5];
 
+/** Returns a human-readable label for screen readers. */
+function getNodeLabel(isStart, isFinish, isGate, isWall, isWeight, row, col) {
+  const parts = [];
+  if (isStart) parts.push('Start node');
+  if (isFinish) parts.push('Finish node');
+  if (isGate) parts.push('Gate node');
+  if (isWall) parts.push('Wall');
+  if (isWeight) parts.push('Weight');
+  parts.push(`row ${row + 1}, column ${col + 1}`);
+  return parts.join(', ');
+}
+
 const Node = React.memo(function Node({
   col,
   isFinish,
@@ -20,6 +32,7 @@ const Node = React.memo(function Node({
   onMouseDown,
   onMouseEnter,
   onMouseUp,
+  onTouchStart,
   row,
 }) {
   const extraClassName = isGate
@@ -43,14 +56,28 @@ const Node = React.memo(function Node({
     }
     : undefined;
 
+  // T14: keyboard toggle — Space/Enter fires the same handler as a mouse click.
+  function handleKeyDown(e) {
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      onMouseDown && onMouseDown();
+      onMouseUp && onMouseUp();
+    }
+  }
+
   return (
     <div
       id={`node-${row}-${col}`}
       className={`node ${extraClassName}`}
       style={wallStyle}
+      role="gridcell"
+      tabIndex={0}
+      aria-label={getNodeLabel(isStart, isFinish, isGate, isWall, isWeight, row, col)}
       onMouseDown={onMouseDown}
       onMouseEnter={onMouseEnter}
       onMouseUp={onMouseUp}
+      onTouchStart={onTouchStart}
+      onKeyDown={handleKeyDown}
     />
   );
 });

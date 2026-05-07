@@ -32,12 +32,16 @@ The `if (el)` guard exists for the null case but only silently skips it — it d
 
 ### Risk 2: Node.js / OpenSSL Build Dependency
 
-**Problem:** All build and start scripts use `set NODE_OPTIONS=--openssl-legacy-provider`, a workaround for a known incompatibility between Node.js 17+ and Webpack 4. If Node.js is upgraded without updating `react-scripts`, the build will fail silently or produce errors.
+**Status: Resolved (T07, May 2026).** `cross-env@10.1.0` was installed as a devDependency and all build/start scripts were updated to use `cross-env NODE_OPTIONS=...` syntax, replacing the Windows-only `set VAR=value &&` form.
 
-**Evidence from codebase:**
+**Original problem:** All build and start scripts used `set NODE_OPTIONS=--openssl-legacy-provider`, a workaround for a known incompatibility between Node.js 17+ and Webpack 4. This syntax only works on Windows `cmd.exe`.
+
+**Resolution:**
 ```json
-"build": "set NODE_OPTIONS=--openssl-legacy-provider && react-scripts build"
+"build": "cross-env NODE_OPTIONS=--openssl-legacy-provider react-scripts build"
 ```
+
+**Remaining risk:** The underlying incompatibility between `react-scripts@3.1.2` (Webpack 4) and Node.js 17+ OpenSSL 3 still requires the `--openssl-legacy-provider` flag. Upgrading `react-scripts` to v5.x would remove this requirement (tracked as T13).
 
 ---
 
@@ -47,9 +51,9 @@ The `if (el)` guard exists for the null case but only silently skips it — it d
 
 ---
 
-### Risk 4: Single `App.test.js` Smoke Test
+### Risk 4: Insufficient Automated Test Coverage
 
-**Problem:** Only one test exists (`renders without crashing`). Algorithmic bugs, rendering regressions, and state management errors would not be caught by automated testing.
+**Status: Partially resolved (T04, T05, T08, T09, T11 — May 2026).** The test suite has grown from 1 smoke test to 74 tests across 10 suites, covering all algorithm implementations, utility functions, component state methods, and the two-phase gate behaviour.
 
 ---
 

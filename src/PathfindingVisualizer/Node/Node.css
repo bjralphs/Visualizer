@@ -11,20 +11,19 @@
   background-position: center;
 }
 
+/* T14: keyboard focus ring — distinct from the grid cell outline */
+.node:focus-visible {
+  outline: 2px solid #f5a623;
+  outline-offset: -2px;
+  z-index: 1;
+}
+
 .node-finish {
   cursor: grab;
   background-image: url('../../assets/icons/carrot.gif'), url('../../assets/grid_background/field.png');
   background-size: cover, cover;
   background-repeat: no-repeat, no-repeat;
   background-position: center, center;
-}
-
-.node-f {
-  background-color: rgb(12, 53, 71);
-}
-
-.node-s {
-  background-color: rgb(12, 53, 71);
 }
 
 .node-start {

@@ -18,6 +18,8 @@
 
 .grid {
   margin: 0;
+  /* T15: prevent browser pan/zoom while drawing with touch */
+  touch-action: none;
 }
 
 .grid>div {

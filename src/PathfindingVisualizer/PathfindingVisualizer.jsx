@@ -1,7 +1,7 @@
 ﻿// Import necessary libraries and components
 import React, { Component } from 'react';
 import Node from './Node/Node';
-import GrassBackground from './GrassBackground';
+// T06-B5: GrassBackground import removed — it is rendered once by App.js (full-viewport layer).
 import { dijkstra, getNodesInShortestPathOrder } from '../algorithms/dijkstra';
 import { bfs } from '../algorithms/breadth_first_search';
 import { dfs } from '../algorithms/depth_first_search';
@@ -94,9 +94,18 @@ export default class PathfindingVisualizer extends Component {
   // When component mounts, populate grid and listen for viewport resize
   componentDidMount() {
     const grid = getInitialGrid();
-    this.setState({ grid }, () => {
-      this.selectMaze(this.context.mazeItem);
-    });
+    // EC4: clamp stored positions to actual grid dimensions (handles near-zero
+    // viewports in jsdom / tests where window.innerHeight/Width === 0).
+    const numRows = grid.length;
+    const numCols = grid[0].length;
+    const startNodeRow = Math.min(START_NODE_ROW, numRows - 1);
+    const startNodeCol = Math.min(START_NODE_COL, numCols - 1);
+    const finishNodeRow = Math.min(FINISH_NODE_ROW, numRows - 1);
+    const finishNodeCol = Math.min(FINISH_NODE_COL, numCols - 1);
+    this.setState(
+      { grid, startNodeRow, startNodeCol, finishNodeRow, finishNodeCol },
+      () => { this.selectMaze(this.context.mazeItem); },
+    );
     window.addEventListener('resize', this.handleResize);
   }
 
@@ -112,12 +121,14 @@ export default class PathfindingVisualizer extends Component {
     this.animationTimeouts = [];
     this.context.setIsAnimating(false);
     const availableHeight = window.innerHeight - NAVBAR_HEIGHT - FOOTER_HEIGHT;
-    const numRows = Math.min(Math.floor((availableHeight - 2 * NODE_HEIGHT) / NODE_HEIGHT), MAX_ROWS);
+    // EC4: Math.max(1, ...) prevents numRows/numCols from reaching 0 or going
+    // negative on near-zero viewports (e.g. jsdom where innerHeight === 0).
+    const numRows = Math.max(1, Math.min(Math.floor((availableHeight - 2 * NODE_HEIGHT) / NODE_HEIGHT), MAX_ROWS));
     // Actual rendered board width: constrained by both max-width and max-height (aspect ratio)
     const infoBoardByWidth = Math.min(INFO_BOARD_WIDTH, window.innerWidth * 0.9);
     const infoBoardByHeight = (window.innerHeight - 270) * INFO_BOARD_ASPECT;
     const infoBoardW = Math.min(infoBoardByWidth, infoBoardByHeight);
-    const numCols = Math.min(Math.floor((window.innerWidth - infoBoardW - PV_PADDING_LEFT - 2 * NODE_WIDTH) / NODE_WIDTH), MAX_COLS);
+    const numCols = Math.max(1, Math.min(Math.floor((window.innerWidth - infoBoardW - PV_PADDING_LEFT - 2 * NODE_WIDTH) / NODE_WIDTH), MAX_COLS));
     const startRow = Math.min(this.state.startNodeRow, numRows - 1);
     const startCol = Math.min(this.state.startNodeCol, numCols - 1);
     const finishRow = Math.min(this.state.finishNodeRow, numRows - 1);
@@ -305,6 +316,8 @@ export default class PathfindingVisualizer extends Component {
         this.setState({ grid: newGrid, hasGate: true, gateNodeRow: row, gateNodeCol: col, mouseIsPressed: true });
       }
     } else {
+      // T02: Guard gate cells — wall-draw mode must not overwrite a placed gate.
+      if (node.isGate) return;
       const newGrid = getNewGridWithWallToggled(grid, row, col);
       this.setState({ grid: newGrid, mouseIsPressed: true });
     }
@@ -349,6 +362,9 @@ export default class PathfindingVisualizer extends Component {
     } else if (drawMode === 'gate') {
       // Gate mode drag while no gate node selected — do nothing
     } else {
+      // T02: Guard gate cells — dragging in wall mode must not overwrite a placed gate.
+      const node = grid[row][col];
+      if (node.isGate) return;
       const newGrid = getNewGridWithWallToggled(grid, row, col);
       this.setState({ grid: newGrid });
     }
@@ -357,6 +373,29 @@ export default class PathfindingVisualizer extends Component {
   // Handle the event when a mouse button is released
   handleMouseUp() {
     this.setState({ mouseIsPressed: false, draggingNode: null });
+  }
+
+  // T15: Touch event handlers — map touch gestures to the existing mouse drawing logic.
+  // preventDefault() stops the browser from panning/zooming the page while drawing.
+
+  handleTouchStart(row, col, e) {
+    e.preventDefault();
+    this.handleMouseDown(row, col);
+  }
+
+  handleTouchMove(e) {
+    e.preventDefault();
+    const touch = e.changedTouches[0];
+    const el = document.elementFromPoint(touch.clientX, touch.clientY);
+    if (!el) return;
+    const match = el.id.match(/^node-(\d+)-(\d+)$/);
+    if (!match) return;
+    this.handleMouseEnter(parseInt(match[1], 10), parseInt(match[2], 10));
+  }
+
+  handleTouchEnd(e) {
+    e.preventDefault();
+    this.handleMouseUp();
   }
 
   // Shared animation engine. getVisitedClass(node) returns the CSS class string
@@ -487,10 +526,20 @@ export default class PathfindingVisualizer extends Component {
     this.applyMaze(newGrid);
   }
 
+  // T01: Random wall scatter (35% probability); distinct from the
+  // carved DFS maze produced by Recursive Division.
   visualizeBRM() {
     const { grid } = this.state;
-    const newGrid = createMaze(grid);
-    this.applyMaze(newGrid);
+    const newGrid = grid.map(row =>
+      row.map(node => {
+        if (node.isStart || node.isFinish || node.isGate) return node;
+        if (Math.random() < 0.35) {
+          return { ...node, isWall: true, isWeight: false, wallVariant: Math.floor(Math.random() * 5) };
+        }
+        return node;
+      }),
+    );
+    this.setState({ grid: newGrid });
   }
 
   visualizeWeightMaze() {
@@ -895,12 +944,11 @@ export default class PathfindingVisualizer extends Component {
       });
   }
 
+  // T06: Removed unreachable 'Average' case — SPEEDS = ['Slow', 'Fast'] only.
   selectSpeed() {
     switch (this.context.speedItem) {
       case 'Fast':
         return 10;
-      case 'Average':
-        return 20;
       case 'Slow':
         return 30;
       default:
@@ -910,20 +958,28 @@ export default class PathfindingVisualizer extends Component {
 
   // Render the visualizer grid and the button to start the visualization
   render() {
-    const { grid, mouseIsPressed, noPathFound } = this.state;
+    // T03: mouseIsPressed removed — no longer forwarded to <Node> (React.memo was defeated by it).
+    const { grid, noPathFound } = this.state;
     const numCols = grid.length > 0 ? grid[0].length : 0;
 
     return (
       <div className="pv-container">
-        <GrassBackground />
         <div className="grid-layer">
           {noPathFound && (
             <div className="no-path-banner">
               No path found — the finish node is unreachable!
             </div>
           )}
-          <div className="grid">
-            <div>
+          {/* T14: role="grid" provides the semantic container for role="gridcell" Nodes */}
+          {/* T15: onTouchMove/onTouchEnd on the grid so a single listener covers all nodes */}
+          <div
+            className="grid"
+            role="grid"
+            aria-label="Pathfinding grid"
+            onTouchMove={e => this.handleTouchMove(e)}
+            onTouchEnd={e => this.handleTouchEnd(e)}
+          >
+            <div role="presentation">
               <img src={fenceTopLeft} alt="" className="fence-tile" />
               {Array.from({ length: numCols }, (_, i) => (
                 <img key={i} src={fenceTopMiddle} alt="" className="fence-tile" />
@@ -932,7 +988,7 @@ export default class PathfindingVisualizer extends Component {
             </div>
             {grid.map((row, rowIdx) => {
               return (
-                <div key={rowIdx}>
+                <div key={rowIdx} role="row">
                   <img src={fenceLeft} alt="" className="fence-tile" />
                   {row.map((node, nodeIdx) => {
                     const { row, col, isFinish, isStart, isWall, isWeight, isGate, wallVariant } = node;
@@ -946,12 +1002,10 @@ export default class PathfindingVisualizer extends Component {
                         isWeight={isWeight}
                         isGate={isGate}
                         wallVariant={wallVariant}
-                        mouseIsPressed={mouseIsPressed}
                         onMouseDown={() => this.handleMouseDown(row, col)}
-                        onMouseEnter={() =>
-                          this.handleMouseEnter(row, col)
-                        }
+                        onMouseEnter={() => this.handleMouseEnter(row, col)}
                         onMouseUp={() => this.handleMouseUp()}
+                        onTouchStart={e => this.handleTouchStart(row, col, e)}
                         row={row}></Node>
                     );
                   })}
@@ -959,7 +1013,7 @@ export default class PathfindingVisualizer extends Component {
                 </div>
               );
             })}
-            <div>
+            <div role="presentation">
               <img src={fenceBottomLeft} alt="" className="fence-tile" />
               {Array.from({ length: numCols }, (_, i) => (
                 <img key={i} src={fenceBottomMiddle} alt="" className="fence-tile" />
@@ -981,12 +1035,14 @@ const getInitialGrid = (
   finishCol = FINISH_NODE_COL,
 ) => {
   const availableHeight = window.innerHeight - NAVBAR_HEIGHT - FOOTER_HEIGHT;
-  const numRows = Math.min(Math.floor((availableHeight - 2 * NODE_HEIGHT) / NODE_HEIGHT), MAX_ROWS);
+  // EC4: Math.max(1, ...) prevents numRows/numCols from reaching 0 or going
+  // negative on near-zero viewports (e.g. jsdom where innerHeight === 0).
+  const numRows = Math.max(1, Math.min(Math.floor((availableHeight - 2 * NODE_HEIGHT) / NODE_HEIGHT), MAX_ROWS));
   // Actual rendered board width: constrained by both max-width and max-height (aspect ratio)
   const infoBoardByWidth = Math.min(INFO_BOARD_WIDTH, window.innerWidth * 0.9);
   const infoBoardByHeight = (window.innerHeight - 270) * INFO_BOARD_ASPECT;
   const infoBoardW = Math.min(infoBoardByWidth, infoBoardByHeight);
-  const numCols = Math.min(Math.floor((window.innerWidth - infoBoardW - PV_PADDING_LEFT - 2 * NODE_WIDTH) / NODE_WIDTH), MAX_COLS);
+  const numCols = Math.max(1, Math.min(Math.floor((window.innerWidth - infoBoardW - PV_PADDING_LEFT - 2 * NODE_WIDTH) / NODE_WIDTH), MAX_COLS));
 
   const grid = [];
   for (let row = 0; row < numRows; row++) {

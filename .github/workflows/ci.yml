@@ -1,14 +1,12 @@
-name: Deploy to GitHub Pages
+name: CI
 
 on:
   push:
-    branches: [ main ]
+  pull_request:
 
 jobs:
-  deploy:
+  test-and-build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -29,9 +27,3 @@ jobs:
         run: npm run build
         env:
           CI: true
-
-      - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: build
-          branch: gh-pages

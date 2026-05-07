@@ -101,7 +101,7 @@ Architecture, algorithm implementation, state management, rendering, deployment,
 **Tradeoffs:**
 - Manual deployment; no automated pipeline on code push.
 - No staging environment.
-- Windows-specific `set NODE_OPTIONS=...` syntax in scripts breaks on Linux/macOS.
+- Windows-specific `set NODE_OPTIONS=...` syntax in scripts breaks on Linux/macOS. **Resolved: T07 (cross-env) + T13 (openssl flag removed).**
 - No server-side capabilities if future features require them.
 
 ---
@@ -143,7 +143,26 @@ Architecture, algorithm implementation, state management, rendering, deployment,
 ---
 
 ## Operational Concerns
-- Several deferred improvements (React upgrade, CI pipeline, cross-platform scripts) accumulate technical debt.
+- Several deferred improvements (React upgrade ✅, CI pipeline, cross-platform scripts ✅) have been addressed. Remaining technical debt: class component refactor, virtual animation engine, CI pipeline.
+
+---
+
+## Decision 8: React 18 Upgrade with Legacy Mode in Tests (T12, May 2026)
+
+**Current approach:** Production uses `createRoot` from `react-dom/client` (React 18 concurrent mode). `PathfindingVisualizer.test.jsx` still uses the deprecated `ReactDOM.render` to obtain a class component instance ref for imperative testing.
+
+**Alternatives considered:**
+- Migrating `PathfindingVisualizer` to a functional component and `useImperativeHandle` to expose the ref cleanly under React 18.
+- Using `@testing-library/react`'s `render` + `act` for all component tests.
+
+**Why current approach was chosen:**
+- Refactoring the class component is high-risk and was deferred (Decision 1). Using `ReactDOM.render` in tests is the minimum change to keep existing component tests passing under React 18.
+- The deprecated call emits a warning in test output only; it does not affect production code.
+
+**Tradeoffs:**
+- React 18 `createRoot` in production enables concurrent features; legacy `ReactDOM.render` in tests opts those test roots into React 17 batching semantics.
+- The deprecation warning in test output is noise; it will become a hard error in a future React major.
+- Resolution: migrate `PathfindingVisualizer` to a functional component (deferred, tracked in Decision 1).
 
 ---
 
@@ -154,6 +173,6 @@ Architecture, algorithm implementation, state management, rendering, deployment,
 
 ## Recommended Follow-up Work
 1. Adopt ADR format for future decisions.
-2. Address the class component → functional component refactor.
+2. Address the class component → functional component refactor (resolves Decision 1 + Decision 8 legacy-mode test issue).
 3. Replace direct DOM mutation with a virtualized animation approach.
-4. Add `cross-env` to fix cross-platform build scripts.
+4. ~~Add `cross-env` to fix cross-platform build scripts.~~ **Done (T07 + T13).**

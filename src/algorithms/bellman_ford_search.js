@@ -1,5 +1,5 @@
 import { WEIGHT_COST } from './constants';
-import { getAllNodes } from './utils';
+import { getAllNodes, getUnvisitedNeighbors } from './utils';
 
 export function bellmanFord(grid, startNode, finishNode) {
   const visitedNodesInOrder = [];
@@ -31,28 +31,19 @@ export function bellmanFord(grid, startNode, finishNode) {
   return visitedNodesInOrder;
 }
 
+// T06-B6: Removed local duplicate getUnvisitedNeighbors.
+// The shared version from utils.js returns all unvisited orthogonal neighbours;
+// we add an explicit !isWall filter here to preserve Bellman-Ford edge semantics.
 function getAllEdges(grid) {
   const edges = [];
   for (const node of getAllNodes(grid)) {
-    const neighbors = getUnvisitedNeighbors(node, grid);
-    for (const neighbor of neighbors) {
-      edges.push({ from: node, to: neighbor });
+    for (const neighbor of getUnvisitedNeighbors(node, grid)) {
+      if (!neighbor.isWall) {
+        edges.push({ from: node, to: neighbor });
+      }
     }
   }
   return edges;
 }
-
-function getUnvisitedNeighbors(node, grid) {
-  const neighbors = [];
-  const { col, row } = node;
-
-  if (row > 0) neighbors.push(grid[row - 1][col]);
-  if (row < grid.length - 1) neighbors.push(grid[row + 1][col]);
-  if (col > 0) neighbors.push(grid[row][col - 1]);
-  if (col < grid[0].length - 1) neighbors.push(grid[row][col + 1]);
-
-  return neighbors.filter(neighbor => !neighbor.isVisited && !neighbor.isWall);
-}
-
 
 
