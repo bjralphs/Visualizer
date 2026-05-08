@@ -293,7 +293,12 @@ describe('handleResize()', () => {
 
 describe('T15 touch handlers', () => {
     it('handleTouchStart sets mouseIsPressed and toggles a wall', () => {
+        // BRM (Basic Random Maze) runs on mount and walls ~35% of cells randomly.
+        // Pin Math.random >= 0.35 during mount so no walls are placed, guaranteeing
+        // that (row, col) starts as a plain node and toggles to isWall: true.
+        const mockRandom = jest.spyOn(Math, 'random').mockReturnValue(0.5);
         const { instance, container } = mountPFV();
+        mockRandom.mockRestore();
         const row = 2, col = 2;
 
         // Simulate touch start on a plain node — should toggle wall on
